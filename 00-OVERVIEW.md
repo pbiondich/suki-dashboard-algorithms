@@ -5,15 +5,19 @@ Operational algorithm specs that bind the **ACI canonical measures**
 [epic-ehi-kg](https://github.com/pbiondich/epic-ehi-kg) knowledge graph) and **Suki's**
 ambient-documentation telemetry, for the Suki analytics dashboard.
 
-This batch covers the **Clarity-computable** tier — measures derivable from Epic's
-relational (Clarity / EHI-export) tables:
+| Spec | Canonical measure | D&M dimension | Basis |
+|---|---|---|---|
+| [CM-04](CM-04-documentation-time.md) | Documentation Time | Individual Impact | Clarity **proxy** (note edit log) |
+| [CM-05](CM-05-after-hours.md) | After-Hours Documentation | Individual Impact | Clarity **proxy** (note edit log) |
+| [CM-06](CM-06-chart-closure.md) | Chart Closure Timeliness | Individual Impact | Clarity-native |
+| [CM-20](CM-20-financial-productivity.md) | Financial Productivity & Revenue | Organizational Impact | Clarity-native |
+| [CM-21](CM-21-coding-accuracy.md) | Coding Accuracy (ICD-10 / HCC / E&M) | Organizational Impact | Clarity-native (+ Suki API) |
+| [CM-22](CM-22-volume-throughput.md) | Patient Volume & Throughput | Organizational Impact | Clarity-native |
 
-| Spec | Canonical measure | D&M dimension |
-|---|---|---|
-| [CM-06](CM-06-chart-closure.md) | Chart Closure Timeliness | Individual Impact |
-| [CM-20](CM-20-financial-productivity.md) | Financial Productivity & Revenue | Organizational Impact |
-| [CM-21](CM-21-coding-accuracy.md) | Coding Accuracy (ICD-10 / HCC / E&M) | Organizational Impact |
-| [CM-22](CM-22-volume-throughput.md) | Patient Volume & Throughput | Organizational Impact |
+CM-06/20/21/22 are **Clarity-native** (the relational record holds them directly). CM-04/05
+are **Clarity proxies**: canonically Signal/UAL metrics, but recoverable from per-note
+edit-event timestamps (`NOTES_HISTORY_LOG` + `HNO_INFO`) as a relative, within-provider
+signal — see those specs for the proxy's limits and the Signal-calibration caveat.
 
 ## The four data tiers (why this scoping)
 
@@ -24,8 +28,10 @@ dashboard architecture:
 1. **Epic Clarity-computable** — relational tables in the EHI/Clarity model (the KG we
    built). *This batch.* CM-06, CM-20, CM-21, CM-22.
 2. **Epic Signal / UAL telemetry** — keystroke/active-time audit logs; a **separate
-   feed**, not in the EHI Clarity export. CM-04 (documentation time), CM-05 (after-hours
-   "pajama time"), CM-07 (total EHR time).
+   feed**, not in the EHI Clarity export. CM-07 (total EHR time) needs this. CM-04
+   (documentation time) and CM-05 (after-hours) are *canonically* Signal but have a
+   **Clarity proxy** in this batch (note edit-event timestamps); Signal remains the
+   gold standard and the calibration reference.
 3. **Suki telemetry / API** — ambient sessions, per-note timing, `structured-data` code
    output. CM-13/14 (adoption), CM-21b (suggestion match-rate).
 4. **Survey / qualitative** — no algorithm; needs instruments. CM-01 burnout, CM-02
@@ -63,6 +69,8 @@ inflate counts and distort per-encounter denominators.
 |---|---|---|---|
 | `PAT_ENC_DX` | `PAT_ENC_CSN_ID` | `PAT_ENC` | high |
 | `ARPB_TRANSACTIONS` | `PAT_ENC_CSN_ID` | `PAT_ENC` | high |
+| `NOTES_HISTORY_LOG` | `NOTE_ID` | `HNO_INFO` | (note edit log → note) |
+| `HNO_INFO` | `PAT_ENC_CSN_ID` | `PAT_ENC` | high |
 | `PAT_ENC_DX` | `DX_ID` | `CLARITY_EDG` (dx master) | n/a* |
 | `ARPB_TRANSACTIONS` | `PROC_ID` | `CLARITY_EAP` (procedure master) | n/a* |
 

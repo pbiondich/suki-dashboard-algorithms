@@ -16,12 +16,14 @@ Three sources meet here:
 
 ## Specs
 
-| Spec | Measure | D&M dimension | Data tier |
+| Spec | Measure | D&M dimension | Data basis |
 |---|---|---|---|
-| [CM-06](CM-06-chart-closure.md) | Chart Closure Timeliness | Individual Impact | Epic Clarity |
-| [CM-20](CM-20-financial-productivity.md) | Financial Productivity & Revenue | Organizational Impact | Epic Clarity |
-| [CM-21](CM-21-coding-accuracy.md) | Coding Accuracy (ICD-10 / HCC / E&M) | Organizational Impact | Epic Clarity + Suki API |
-| [CM-22](CM-22-volume-throughput.md) | Patient Volume & Throughput | Organizational Impact | Epic Clarity |
+| [CM-04](CM-04-documentation-time.md) | Documentation Time | Individual Impact | Clarity proxy (note edit log) |
+| [CM-05](CM-05-after-hours.md) | After-Hours Documentation | Individual Impact | Clarity proxy (note edit log) |
+| [CM-06](CM-06-chart-closure.md) | Chart Closure Timeliness | Individual Impact | Clarity-native |
+| [CM-20](CM-20-financial-productivity.md) | Financial Productivity & Revenue | Organizational Impact | Clarity-native |
+| [CM-21](CM-21-coding-accuracy.md) | Coding Accuracy (ICD-10 / HCC / E&M) | Organizational Impact | Clarity-native + Suki API |
+| [CM-22](CM-22-volume-throughput.md) | Patient Volume & Throughput | Organizational Impact | Clarity-native |
 
 **Start with [`00-OVERVIEW.md`](00-OVERVIEW.md)** — it lays out the four data tiers, the
 shared comparison methodology (within-provider pre/post, onboarding-ramp exclusion,
@@ -30,10 +32,12 @@ paths every spec reuses.
 
 ## Status & roadmap
 
-This first batch covers the **Epic Clarity-computable** tier. Planned next:
+Covered so far: the **Clarity-native** measures (CM-06/20/21/22) plus **Clarity proxies**
+for CM-04 (documentation time) and CM-05 (after-hours), derived from note edit-event
+timestamps. Planned next:
 
-- **Epic Signal / UAL tier** — CM-04 documentation time, CM-05 after-hours, CM-07 total
-  EHR time (a separate telemetry feed, not the Clarity export).
+- **Epic Signal / UAL tier** — CM-07 total EHR time (needs the Signal feed); also the
+  gold-standard calibration source for the CM-04/05 proxies.
 - **Suki / adoption tier** — CM-13 utilization, CM-14 long-term use.
 - Survey-based measures (burnout, trust, satisfaction) need instruments, not algorithms.
 
