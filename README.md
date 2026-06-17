@@ -1,16 +1,20 @@
 # Suki Dashboard Algorithms
 
 Operational algorithm specs for an **Ambient Clinical Intelligence (ACI) analytics
-dashboard** — each one binds a **canonical evaluation measure** to **Epic's data model**
+dashboard** — each one binds a **canonical evaluation measure** to an **EHR data model**
 and **Suki's** ambient-documentation telemetry, so a measure goes from a literature
-definition to a computable dashboard metric.
+definition to a computable dashboard metric. Both major EHRs are covered:
+
+- **Epic (Clarity)** — the specs in this root folder.
+- **Cerner / Oracle Health (Millennium)** — the parallel set in [`cerner/`](cerner/00-OVERVIEW.md).
 
 Three sources meet here:
 
 - **What to measure** — the canonical measures from the ACI structured evidence review
   ([`pbiondich/aci`](https://github.com/pbiondich/aci)).
-- **Where the data lives & how to join it** — Epic's EHI/Clarity schema, via the
-  knowledge graph in [`pbiondich/epic-ehi-kg`](https://github.com/pbiondich/epic-ehi-kg).
+- **Where the data lives & how to join it** — Epic's EHI/Clarity schema
+  ([`epic-ehi-kg`](https://github.com/pbiondich/epic-ehi-kg)) and Cerner's Millennium schema
+  ([`cerner-ehi-kg`](https://github.com/pbiondich/cerner-ehi-kg)).
 - **The intervention & its telemetry** — Suki ambient sessions and structured-data output
   ([developer.suki.ai](https://developer.suki.ai/documentation/ambient-documentation)).
 
@@ -18,17 +22,32 @@ Three sources meet here:
 
 | Spec | Measure | D&M dimension | Data basis |
 |---|---|---|---|
-| [CM-04](CM-04-documentation-time.md) | Documentation Time | Individual Impact | Clarity proxy (note edit log) |
-| [CM-05](CM-05-after-hours.md) | After-Hours Documentation | Individual Impact | Clarity proxy (note edit log) |
-| [CM-06](CM-06-chart-closure.md) | Chart Closure Timeliness | Individual Impact | Clarity-native |
-| [CM-20](CM-20-financial-productivity.md) | Financial Productivity & Revenue | Organizational Impact | Clarity-native |
-| [CM-21](CM-21-coding-accuracy.md) | Coding Accuracy (ICD-10 / HCC / E&M) | Organizational Impact | Clarity-native + Suki API |
-| [CM-22](CM-22-volume-throughput.md) | Patient Volume & Throughput | Organizational Impact | Clarity-native |
+### Epic (Clarity) — [`epic/`](epic/00-OVERVIEW.md)
 
-**Start with [`00-OVERVIEW.md`](00-OVERVIEW.md)** — it lays out the four data tiers, the
-shared comparison methodology (within-provider pre/post, onboarding-ramp exclusion,
-specialty/FTE normalization), the Suki attribution dependency, and the verified Epic join
-paths every spec reuses.
+| Spec | Measure | D&M dimension | Data basis |
+|---|---|---|---|
+| [CM-04](epic/CM-04-documentation-time.md) | Documentation Time | Individual Impact | Clarity proxy (note edit log) |
+| [CM-05](epic/CM-05-after-hours.md) | After-Hours Documentation | Individual Impact | Clarity proxy (note edit log) |
+| [CM-06](epic/CM-06-chart-closure.md) | Chart Closure Timeliness | Individual Impact | Clarity-native |
+| [CM-20](epic/CM-20-financial-productivity.md) | Financial Productivity & Revenue | Organizational Impact | Clarity-native |
+| [CM-21](epic/CM-21-coding-accuracy.md) | Coding Accuracy (ICD-10 / HCC / E&M) | Organizational Impact | Clarity-native + Suki API |
+| [CM-22](epic/CM-22-volume-throughput.md) | Patient Volume & Throughput | Organizational Impact | Clarity-native |
+
+**Start with [`epic/00-OVERVIEW.md`](epic/00-OVERVIEW.md)** — it lays out the four data
+tiers, the shared comparison methodology (within-provider pre/post, onboarding-ramp
+exclusion, specialty/FTE normalization), the Suki attribution dependency, and the verified
+Epic join paths every spec reuses.
+
+### Cerner / Oracle Health (Millennium)
+
+The same six measures, bound to Millennium, live in [`cerner/`](cerner/00-OVERVIEW.md)
+(`cerner/CM-04` … `cerner/CM-22`). Because Cerner publishes real keys and richer reference
+data, several bindings are *more direct* than Epic's — real ICD-10 codes via `NOMENCLATURE`
+(vs Epic's `DX_ID` proxy), native `PFT_RVU_CONTENT` for wRVU, and a true
+`CHART_COMPLETE_DT_TM` timestamp. The trade-off: CM-04 has no sessionizable edit log on
+Cerner, so it's a coarser author→verify span. The canonical definition, Suki attribution,
+and comparison methodology are identical across vendors — which is the point: one dashboard,
+two EHR bindings, neutral measures.
 
 ## Status & roadmap
 
